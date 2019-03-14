@@ -3,6 +3,8 @@
 namespace app\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCafeRequest;
+use App\Utilities\GaodeMaps;
 use Request;
 use App\Models\Cafe;
 
@@ -44,17 +46,17 @@ class CafesController extends Controller
      | Method:         POST
      | Description:    Adds a new cafe to the application
     */
-    public function postNewCafe(){
+    public function postNewCafe(StoreCafeRequest $request){
         $cafe = new Cafe();
 
-        $cafe->name     = Request::get('name');
-        $cafe->address  = Request::get('address');
-        $cafe->city     = Request::get('city');
-        $cafe->state    = Request::get('state');
-        $cafe->zip      = Request::get('zip');
-
-        $cafe->latitude = 0;
-        $cafe->longitude= 0;
+        $cafe->name     = $request->input('name');
+        $cafe->address  = $request->input('address');
+        $cafe->city     = $request->input('city');
+        $cafe->state    = $request->input('state');
+        $cafe->zip      = $request->input('zip');
+        $coordinates    = GaodeMaps::geocodeAddress($cafe->address, $cafe->city, $cafe->state);
+        $cafe->latitude = $coordinates['lat'];
+        $cafe->longitude = $coordinates['lng'];
 
         $cafe->save();
 

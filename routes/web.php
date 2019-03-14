@@ -27,3 +27,7 @@ Route::get( '/auth/{social}', 'Web\AuthenticationController@getSocialRedirect' )
 
 Route::get( '/auth/{social}/callback', 'Web\AuthenticationController@getSocialCallback' )
     ->middleware('guest');
+
+Route::get('geocode', function () {
+    return \App\Utilities\GaodeMaps::geocodeAddress('天安门', '北京', '北京');
+});
